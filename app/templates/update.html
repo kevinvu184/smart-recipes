@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Smart Recipe | Update Recipe {{ recipes.name }}{% endblock %}
+{% block add_active %}active{% endblock %}
+{% block body %}
+
+    <main role="main">
+        <div class="jumbotron">
+            <div class="container">
+                <h1 class="display-4 text-center">What to Edit your recipe?</h1>
+                <p class="lead text-center">Really easy to edit your recipe</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <form action="/update/{{ recipes.id }}" method="POST">
+                <input type="hidden" class="id" value="{{ recipes.id }}">
+                <div class="form-group">
+                    <label for="recipe-name">Recipe Name</label>
+                    <input required type="text" name="recipe[name]" class="form-control" id="recipe-name"
+                           placeholder="Be creative: Shaking Beef, Spiny Lobster In Crazy Water, etc"
+                           value="{{ recipes.name }}">
+                </div>
+
+                <div class="row">
+                    <div class="col-md">
+                        <div class="form-group">
+                            <label for="recipe-time">Time to cook</label>
+                            <select class="form-control" id="recipe-time" name="recipe[time]">
+                                <option>{{ recipes.time }}</option>
+                                <option>30</option>
+                                <option>60</option>
+                                <option>90</option>
+                                <option>120</option>
+                                <option>150</option>
+                                <option>180</option>
+                                <option>210</option>
+                                <option>240</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-group">
+                            <label for="recipe-serving">Number of serving</label>
+                            <select class="form-control" id="recipe-serving" name="recipe[serving]">
+                                <option>{{ recipes.serving }}</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                                <option>13</option>
+                                <option>14</option>
+                                <option>15</option>
+                                <option>16</option>
+                                <option>17</option>
+                                <option>18</option>
+                                <option>19</option>
+                                <option>20</option>
+                                <option>21</option>
+                                <option>22</option>
+                                <option>23</option>
+                                <option>24</option>
+                                <option>25</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-description">A little description</label>
+                    <textarea required class="form-control" id="recipe-description" rows="3"
+                              name="recipe[description]">{{ recipes.description }}</textarea>
+                </div>
+
+                <div class="form-group" id="ingredient-field">
+                    <label for="ingredient">What are your ingredient</label>
+                    {% for ingredient in ingredients %}
+                    <div class="row" id="row-i0">
+                        <div class="col-3 mt-1 px-1">
+                            <input required type="text" name="ingredient-quantity[0]" class="form-control"
+                                   id="ingredient-quantity-0" placeholder="How much?"
+                                   value="{{ ingredient.quantity }}">
+                        </div>
+                        <div class="col-7 mt-1 px-1">
+                            <input required type="text" name="ingredient-name[0]" class="form-control"
+                                   id="ingredient-name-0"
+                                   placeholder="List your ingredients, click button for even more steps!"
+                                   value="{{ ingredient.name }}">
+                        </div>
+                        <button name="ingredient-add" type="button" class="col-2 btn btn-primary mt-1 px-1" id="btn-i0">+</button>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+                <div class="form-group" id="recipe-field">
+                    <label for="cook" id="cook-field">Finally, Show me your move</label>
+                    {% for cook in cooks %}
+                    <div class="row" id="row-c0">
+                        <div class="col-1 mt-1 px-1">
+                            <input required type="text" name="cook-step[0]" class="form-control" id="cook-step-0"
+                                   value="{{ cook.step }}" readonly>
+                        </div>
+                        <div class="col-9 mt-1 px-1">
+                            <input required type="text" name="cook-name[0]" class="form-control" id="cook-name-0"
+                                   placeholder="List your step, click button for even more steps!"
+                                   value="{{ cook.name }}">
+                        </div>
+                        <button name="cook-add" type="button" class="col-2 btn btn-primary mt-1 px-1" id="btn-c0">+</button>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-info btn-lg btn-block" name="update">Update</button>
+                </div>
+            </form>
+        </div>
+    </main>
+{% endblock %}

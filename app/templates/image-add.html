@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Smart Recipe | New Recipe{% endblock %}
+{% block add_active %}active{% endblock %}
+{% block body %}
+<script>    
+    $('#myForm').on('submit', function(e){
+        $('#myModal').modal('show');
+        e.preventDefault();
+    });
+</script>
+    <main role="main">
+        {% if not submission_successful %}
+        <div class="jumbotron">
+            <div class="container">
+                <h1 class="display-4 text-center">Create your own Recipe</h1>
+                <p class="lead text-center">You are 1 click away from your unique masterpice!</p>
+                <hr class="my-4">
+                <p>Input recipes with the click of a button</p>
+                <p class="lead">
+                    <form method=post enctype=multipart/form-data action="{{ url_for('upload_file') }}">
+                        <input type=file name=file accept="image/*" capture>
+                        <input class="btn btn-primary" type=submit value=Upload >
+                    </form>
+                </p>
+            </div>
+        </div>
+        <div class="container">
+            <p class="text-center display-4">Step 1. Take the picture of the ingredient.</p>
+            <p class="text-center display-4">Step 2. Modify the amount</p>
+            <p class="text-center display-4">Step 3. it's just that simple</p>
+        </div>
+        {% endif %}
+        {% if submission_successful %}
+       
+        
+        <div class="jumbotron">
+            <img src="{{ file_url }}" class="rounded mx-auto d-block img-thumbnail" alt="Ingredients Image">
+        </div>
+
+        <div class="container">
+            <form action="{{ url_for('insert_image') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" class="id" value="">
+                <div class="form-group">
+                    <label for="recipe-name">Recipe Name</label>
+                    <input required type="text" name="recipe[name]" class="form-control" id="recipe-name"
+                           placeholder="Be creative: Shaking Beef, Spiny Lobster In Crazy Water, etc" value="">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-pic">Dish picture</label>
+                    <input id="recipe-pic" name="recipe[pic]" type="file" accept="image/*;capture=camera">
+                </div>
+
+                <div class="row">
+                    <div class="col-md">
+                        <div class="form-group">
+                            <label for="recipe-time">Time to cook</label>
+                            <select class="form-control" id="recipe-time" name="recipe[time]">
+                                <option value="0">Please Enter</option>
+                                <option>30</option>
+                                <option>60</option>
+                                <option>90</option>
+                                <option>120</option>
+                                <option>150</option>
+                                <option>180</option>
+                                <option>210</option>
+                                <option>240</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-group">
+                            <label for="recipe-serving">Number of servings</label>
+                            <select class="form-control" id="recipe-serving" name="recipe[serving]">
+                                <option value="0">Please Enter</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                                <option>13</option>
+                                <option>14</option>
+                                <option>15</option>
+                                <option>16</option>
+                                <option>17</option>
+                                <option>18</option>
+                                <option>19</option>
+                                <option>20</option>
+                                <option>21</option>
+                                <option>22</option>
+                                <option>23</option>
+                                <option>24</option>
+                                <option>25</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-description">A little description</label>
+                    <textarea required class="form-control" id="recipe-description" rows="3"
+                              name="recipe[description]"></textarea>
+                </div>
+
+                <div class="form-group" id="ingredient-field">
+                    <label for="ingredient">Select the ingredients</label>
+                    {% for concept in concepts %}
+                        <div class="row" id="row-i0">
+                            <div class="col-3 mt-1 px-1">
+                                <input type="text" name="ingCheckboxAmt" class="form-control" id="ingredient-quantity-0" placeholder="How much?" value="">
+                            </div>
+
+                            <div class="col py-3 px-lg-5">
+                                <input class="form-check-input" type="checkbox" value="{{ concept.name }}" id="defaultCheck1" name="ingCheckbox">
+                                <label class="form-check-label" for="defaultCheck1" >
+                                    {{ concept.name }}
+                                </label>
+                            </div>
+                            
+                        </div>
+                    {% endfor %}
+                    <div class="form-group" id="ingredient-field2">
+                        <div class="row" id="row-i0">
+                            <div class="col-3 mt-1 px-1">
+                                <input type="text" name="newIngQty" class="form-control"
+                                        id="ingredient-quantity-0" placeholder="How much?" value="">
+                            </div>
+                            <div class="col-7 mt-1 px-1">
+                                <input type="text" name="newIng" class="form-control"
+                                        id="ingredient-name-0"
+                                        placeholder="List your ingredients, click button for even more steps!" value="">
+                            </div>
+                            <button name="ingredient-add" type="button" class="col-2 btn btn-primary mt-1 px-1" id="btn-ing">+</button>
+                        </div>
+                     </div>    
+                </div>
+
+
+                <div class="form-group" id="recipe-field2">
+                    <label for="cook" id="cook-field">Finally, List the steps</label>
+                    <div class="row" id="row-c0">
+                        <div class="col-1 mt-1 px-1">
+                            <input required type="text" name="stepNum" class="form-control" id="cook-step-0"
+                                   value="1" readonly>
+                        </div>
+                        <div class="col-9 mt-1 px-1">
+                            <input required type="text" name="stepName" class="form-control" id="cook-name-0"
+                                   placeholder="List your step, click button for even more steps!" value="">
+                        </div>
+                        <button name="cook-add" type="button" class="col-2 btn btn-primary mt-1 px-1" id="btn-step">+</button>
+                        <button type="button" class="col-2 btn btn-danger mt-1 px-1" id="btn-c2" style="display: none;">-</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-lg btn-block" name="save">Save</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </main>
+{% endblock %}

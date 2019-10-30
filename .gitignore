@@ -1,0 +1,10 @@
+.vscode/
+beta/
+*.pyc
+cc_penv/*
+/pi/audio/*
+.idea/
+__pycache__/
+venv
+cloud_sql_proxy.exe
+lib/

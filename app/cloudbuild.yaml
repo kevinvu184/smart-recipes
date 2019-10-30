@@ -1,0 +1,12 @@
+steps:
+- id: 'Deploy to Environment'
+  name: 'gcr.io/cloud-builders/gcloud'
+  args: [
+    'app', 
+    'deploy', 
+    'app.yaml',
+    '--version=$BUILD_ID',
+    '--no-promote',
+    '--quiet'
+    ]
+  dir: './app'

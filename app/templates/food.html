@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Smart Recipe | Recipe{% endblock %}
+{% block body %}
+    <main class="bd-masthead" id="content" role="main">
+        <div class="container bg-custom-1">
+            <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark mt-5 ml-4 mr-4 mb-2" style="background-image: url('{{ recipes.image_file }}'); background-repeat:no-repeat; background-position:85% 50%;">
+                <div class="col-md-6 px-0">
+                    <h1 class="display-4 font-italic px-3">{{ recipes.name }}</h1>
+                    <p class="lead my-3 px-2">{{ recipes.description }}</p>
+                    <p class="lead mb-0 px-2"><a href="#recipe" class="text-white font-weight-bold">Continue reading...</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col col-lg-2">
+                    <h2 class="text-center">Estimate</h2>
+                    <p class="text-center" id="estimate">{{ recipes.time }} hours</p>
+                </div>
+                <div class="col col-lg-2">
+                    <h2 class="text-center">Serving</h2>
+                    <p class="text-center" id="serving">{{ recipes.serving }} people</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container bg-custom-1 mt-4 mb-4" id="recipe">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2 class="text-center">Ingredients</h2>
+                    {% for ingredient in ingredients %}
+                    <div class="row">
+                        <div class="col-4">
+                            <p id="ingredient-quantity">
+                                {{ ingredient.quantity }}
+                            </p>
+                        </div>
+                        <div class="col-8">
+                            <p id="ingredient-name">
+                                {{ ingredient.name }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-8">
+                    <h2 class="text-center">Method</h2>
+                    {% for cook in cooks %}
+                    <div class="row">
+                        <div class="col-1">
+                            <p id="cook-step">
+                                Step {{ cook.step }}
+                            </p>
+                        </div>
+                        <div class="col-11">
+                            <p id="cook-name">
+                                {{ cook.name }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg btn-block mt-3">Back Home</a>
+            <a href="/update/{{ recipes.id }}" class="btn btn-info btn-lg btn-block">Edit</a>
+            <a href="/delete/{{ recipes.id }}" class="btn btn-danger btn-lg btn-block mb-3"
+               onclick="return confirm('Delete will be pernament. Are your sure to delete?')">Delete</a>
+        </div>
+    </main>
+{% endblock %}

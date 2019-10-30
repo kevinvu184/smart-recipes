@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="This website is a part of course work in CC sem 2 2019.">
+    <meta name="author" content="Kevin Vu & Avital Miskella">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='chatbox.css') }}">
+    <title>{{ title }}</title>
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top"
+     style="background-color: #022c43; border-top: black 1px solid;">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='favicon.ico') }}" width="30" height="30"
+                 class="d-inline-block align-top" alt="Smart Recipe Logo">
+            SmartRecipes
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% block index_active %}inactive{% endblock %}" href="{{ url_for('index') }}">Home</a>
+                </li>
+                <li class="nav-item dropdown logged-in">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Recipe</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div>
+                            <a href="{{ url_for('add_image') }}" class="dropdown-item"> Smart Add</a> 
+                        </div>
+                        <div>
+                            <a href="{{ url_for('add') }}" class="dropdown-item"> Manual Add</a> 
+                        </div>
+    
+                    </div>
+                </li>
+                <li class="nav-item logged-in">		
+                    <a class="nav-link {% block bot_active %}inactive{% endblock %}" href="{{ url_for('bot') }}">Chat bot</a>		
+	            </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="logged-out">
+                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-term">Privacy
+                                Policy</a>
+                        </div>
+                        <div class="logged-in">
+                            <a href="#" class="dropdown-item" data-toggle="modal"
+                               data-target="#modal-account">Profile</a>
+                        </div>
+                        <div class="dropdown-divider logged-in"></div>
+                        <div class="logged-in">
+                            <a href="#" class="dropdown-item" id="logout">Logout</a>
+                        </div>
+                        <div class="logged-out">
+                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-login">Login</a>
+                        </div>
+                        <div class="logged-out">
+                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-signup">Sign
+                                up</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search Recipe" aria-label="Search">
+                <button class="btn btn-search my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- SIGN UP MODAL -->
+<div id="modal-signup" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signUpTitle">Sign up</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="signup-form">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 mb-3 font-weight-normal">Smart Recipe</h1>
+                    </div>
+                    <div class="form-label-group">
+                        <label for="inputEmail" style="display: none">Email address</label>
+                        <input type="email" id="signup-email" class="form-control" placeholder="Email address" required
+                               autofocus>
+                    </div>
+                    <div class="form-label-group mt-2">
+                        <label for="inputPassword" style="display: none">Password</label>
+                        <input type="password" id="signup-password" class="form-control" placeholder="Password"
+                               required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$">
+                    </div>
+                    <button class="btn btn-lg btn-warning btn-block mt-4" type="submit">Sign up</button>
+                    <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2019</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- LOGIN MODAL -->
+<div id="modal-login" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginTitle">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 mb-3 font-weight-normal">Smart Recipe</h1>
+                    </div>
+                    <div class="form-label-group">
+                        <label for="inputEmail" style="display: none">Email address</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="Email address" required
+                               autofocus>
+                    </div>
+                    <div class="form-label-group mt-2">
+                        <label for="inputPassword" style="display: none">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <a class="btn btn-lg btn-info btn-block mt-4" onclick="googleSignIn()">Sign up with Google</a>
+                    <button class="btn btn-lg btn-warning btn-block mt-2" type="submit">Login</button>
+                    <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2019</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ACCOUNT MODAL -->
+<div id="modal-account" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content center-align">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginTitle">Account details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="account-details"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-term" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content center-align">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginTitle">Private Policy</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h1>Privacy Policy</h1>
+
+
+                <p>Effective date: October 04, 2019</p>
+
+
+                <p>Smart Recipes ("us", "we", or "our") operates the https://smart-recipes-cc.appspot.com/ website (the
+                    "Service").</p>
+
+                <p>This page informs you of our policies regarding the collection, use, and disclosure of personal data
+                    when you use our Service and the choices you have associated with that data. Our Privacy Policy for
+                    Smart Recipes is created with the help of the <a
+                            href="https://www.freeprivacypolicy.com/free-privacy-policy-generator.php">Free Privacy
+                        Policy Generator</a>.</p>
+
+                <p>We use your data to provide and improve the Service. By using the Service, you agree to the
+                    collection and use of information in accordance with this policy. Unless otherwise defined in this
+                    Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and
+                    Conditions, accessible from https://smart-recipes-cc.appspot.com/</p>
+
+
+                <h2>Information Collection And Use</h2>
+
+                <p>We collect several different types of information for various purposes to provide and improve our
+                    Service to you.</p>
+
+                <h3>Types of Data Collected</h3>
+
+                <h4>Personal Data</h4>
+
+                <p>While using our Service, we may ask you to provide us with certain personally identifiable
+                    information that can be used to contact or identify you ("Personal Data"). Personally identifiable
+                    information may include, but is not limited to:</p>
+
+                <ul>
+                    <li>Email address</li>
+                    <li>First name and last name</li>
+                    <li>Cookies and Usage Data</li>
+                </ul>
+
+                <h4>Usage Data</h4>
+
+                <p>We may also collect information how the Service is accessed and used ("Usage Data"). This Usage Data
+                    may include information such as your computer's Internet Protocol address (e.g. IP address), browser
+                    type, browser version, the pages of our Service that you visit, the time and date of your visit, the
+                    time spent on those pages, unique device identifiers and other diagnostic data.</p>
+
+                <h4>Tracking & Cookies Data</h4>
+                <p>We use cookies and similar tracking technologies to track the activity on our Service and hold
+                    certain information.</p>
+                <p>Cookies are files with small amount of data which may include an anonymous unique identifier. Cookies
+                    are sent to your browser from a website and stored on your device. Tracking technologies also used
+                    are beacons, tags, and scripts to collect and track information and to improve and analyze our
+                    Service.</p>
+                <p>You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.
+                    However, if you do not accept cookies, you may not be able to use some portions of our Service.</p>
+                <p>Examples of Cookies we use:</p>
+                <ul>
+                    <li><strong>Session Cookies.</strong> We use Session Cookies to operate our Service.</li>
+                    <li><strong>Preference Cookies.</strong> We use Preference Cookies to remember your preferences and
+                        various settings.
+                    </li>
+                    <li><strong>Security Cookies.</strong> We use Security Cookies for security purposes.</li>
+                </ul>
+
+                <h2>Use of Data</h2>
+
+                <p>Smart Recipes uses the collected data for various purposes:</p>
+                <ul>
+                    <li>To provide and maintain the Service</li>
+                    <li>To notify you about changes to our Service</li>
+                    <li>To allow you to participate in interactive features of our Service when you choose to do so</li>
+                    <li>To provide customer care and support</li>
+                    <li>To provide analysis or valuable information so that we can improve the Service</li>
+                    <li>To monitor the usage of the Service</li>
+                    <li>To detect, prevent and address technical issues</li>
+                </ul>
+
+                <h2>Transfer Of Data</h2>
+                <p>Your information, including Personal Data, may be transferred to — and maintained on — computers
+                    located outside of your state, province, country or other governmental jurisdiction where the data
+                    protection laws may differ than those from your jurisdiction.</p>
+                <p>If you are located outside Australia and choose to provide information to us, please note that we
+                    transfer the data, including Personal Data, to Australia and process it there.</p>
+                <p>Your consent to this Privacy Policy followed by your submission of such information represents your
+                    agreement to that transfer.</p>
+                <p>Smart Recipes will take all steps reasonably necessary to ensure that your data is treated securely
+                    and in accordance with this Privacy Policy and no transfer of your Personal Data will take place to
+                    an organization or a country unless there are adequate controls in place including the security of
+                    your data and other personal information.</p>
+
+                <h2>Disclosure Of Data</h2>
+
+                <h3>Legal Requirements</h3>
+                <p>Smart Recipes may disclose your Personal Data in the good faith belief that such action is necessary
+                    to:</p>
+                <ul>
+                    <li>To comply with a legal obligation</li>
+                    <li>To protect and defend the rights or property of Smart Recipes</li>
+                    <li>To prevent or investigate possible wrongdoing in connection with the Service</li>
+                    <li>To protect the personal safety of users of the Service or the public</li>
+                    <li>To protect against legal liability</li>
+                </ul>
+
+                <h2>Security Of Data</h2>
+                <p>The security of your data is important to us, but remember that no method of transmission over the
+                    Internet, or method of electronic storage is 100% secure. While we strive to use commercially
+                    acceptable means to protect your Personal Data, we cannot guarantee its absolute security.</p>
+
+                <h2>Service Providers</h2>
+                <p>We may employ third party companies and individuals to facilitate our Service ("Service Providers"),
+                    to provide the Service on our behalf, to perform Service-related services or to assist us in
+                    analyzing how our Service is used.</p>
+                <p>These third parties have access to your Personal Data only to perform these tasks on our behalf and
+                    are obligated not to disclose or use it for any other purpose.</p>
+
+
+                <h2>Links To Other Sites</h2>
+                <p>Our Service may contain links to other sites that are not operated by us. If you click on a third
+                    party link, you will be directed to that third party's site. We strongly advise you to review the
+                    Privacy Policy of every site you visit.</p>
+                <p>We have no control over and assume no responsibility for the content, privacy policies or practices
+                    of any third party sites or services.</p>
+
+
+                <h2>Children's Privacy</h2>
+                <p>Our Service does not address anyone under the age of 18 ("Children").</p>
+                <p>We do not knowingly collect personally identifiable information from anyone under the age of 18. If
+                    you are a parent or guardian and you are aware that your Children has provided us with Personal
+                    Data, please contact us. If we become aware that we have collected Personal Data from children
+                    without verification of parental consent, we take steps to remove that information from our
+                    servers.</p>
+
+
+                <h2>Changes To This Privacy Policy</h2>
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the
+                    new Privacy Policy on this page.</p>
+                <p>We will let you know via email and/or a prominent notice on our Service, prior to the change becoming
+                    effective and update the "effective date" at the top of this Privacy Policy.</p>
+                <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy
+                    Policy are effective when they are posted on this page.</p>
+
+
+                <h2>Contact Us</h2>
+                <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                <ul>
+                    <li>By email: kevinvu184@gmail.com</li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block body %}
+{% endblock %}
+
+<footer class="text-muted sticky-bottom">
+    <div class="container">
+        <p> &copy;Kevin Vu - s3678490/ Avital Miskella - s3602133.</p>
+        <p>Disclaimer: This website is not a real website and is being developed as part of a School of Science
+            Cloud Computing course at RMIT University in Melbourne, Australia.</p>
+    </div>
+</footer>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-database.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyAmNTwkZpljwdec8cXhjwoC2J-KjWSstWw",
+        authDomain: "smart-recipes-cc.firebaseapp.com",
+        databaseURL: "https://smart-recipes-cc.firebaseio.com",
+        projectId: "smart-recipes-cc"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    //make auth and firestore references
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='auth.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
+{% endautoescape %}
