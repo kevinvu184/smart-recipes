@@ -4,7 +4,7 @@ RMIT - CC Semester 2 2019
 
 © Kevin Vu 2019. Disclaimer: This repo is an asset of Kevin Vu and is being developed as part of a School of Science Cloud Computing course at RMIT University in Melbourne, Australia. Any plagiarism act will be reported.
 
-- Link: https://lunardo-cinemas.appspot.com/
+- Link: https://smart-recipes-cc.appspot.com/ 
 
 ## Team member
 - Kevin Vu
